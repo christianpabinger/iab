@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Planung</title>
+    <link rel="stylesheet" href="jqwidgets/styles/jqx.base.css" type="text/css" />
+    <link rel="stylesheet" href="jqwidgets/styles/jqx.energyblue.css" type="text/css" />
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	
+	<script type="text/javascript" src="initTeacher.js"></script>
+	<script type="text/javascript" src="initLV2.js"></script>
+    <script type="text/javascript" src="initPlanung6.js"></script>
+    <script type="text/javascript" src="initPlanungTeacher.js"></script>
+    <script type="text/javascript" src="initAnsichtLehrer3.js"></script>
+	<script type="text/javascript" src="initEinstellungen.js"></script>
+	
+    <script type="text/javascript" src="jqwidgets/jqxcore.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxtabs.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxcore.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxdata.js"></script> 
+    <script type="text/javascript" src="jqwidgets/jqxbuttons.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxinput.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxscrollbar.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxmenu.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxcheckbox.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxlistbox.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxdropdownlist.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxgrid.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxgrid.sort.js"></script> 
+    <script type="text/javascript" src="jqwidgets/jqxgrid.pager.js"></script> 
+    <script type="text/javascript" src="jqwidgets/jqxgrid.selection.js"></script> 
+    <script type="text/javascript" src="jqwidgets/jqxgrid.edit.js"></script> 
+    <script type="text/javascript" src="jqwidgets/jqxdata.export.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxgrid.export.js"></script> 
+    <script type="text/javascript" src="jqwidgets/jqxgrid.columnsresize.js"></script> 
+    <script type="text/javascript" src="jqwidgets/jqxfileupload.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxgrid.filter.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxdragdrop.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxdropdownlist.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxcheckbox.js"></script>
+	<script type="text/javascript" src="jqwidgets/jqxcombobox.js"></script>
+	<script type="text/javascript" src="jqwidgets/jqxtextarea.js"></script>
+	<script type="text/javascript" src="jqwidgets/jqxpasswordinput.js"></script>
+    <script type="text/javascript">
+	
+		var global_planungsstudienjahr;
+		var global_planungsjahrindex;
+		var global_sourcejahre = ["20/21", "21/22", "22/23", "23/24", "24/25", "25/26", "26/27", "27/28"];
+		
+		$.ajax({
+                        dataType: 'json',
+                        url: 'einstellungen.php',
+                        cache: false,
+                        type: "GET",
+                        data: {getPlanungsjahr: true},
+                        success: function (data, status, xhr) {
+                                //console.log(data);
+								//$("#Planungsjahrdropdownbox").jqxDropDownList({width: 100, source: global_sourcejahre, theme: theme, selectedIndex: data});
+                                global_planungsjahrindex = data;
+								global_planungsstudienjahr = global_sourcejahre[data];
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                              
+                        }
+        });
+		
+        $(document).ready(function () {
+			var theme = "energyblue";
+                      
+
+			
+
+							
+			var initWidgets = function (tab) {
+				switch (tab){
+					case 0:
+						initLV();
+                        //console.log("initlv");
+						break;
+					case 1:
+						initTeacher();
+						break;
+					case 2:
+						initEinstellungen();
+						break;
+                                                
+                                        case 3:
+						initPlanung();
+						break;
+                                              
+                                        case 4:
+						initPlanungTeacher();
+						break;
+					case 5:
+						initAnsichtLehrer();
+						break;
+
+				}
+			
+			};//function initWidgets
+			
+			// create jqxtabs.
+                $('#jqxtabs').jqxTabs({  reorder: true,  initTabContent: initWidgets, theme: theme});
+				$('#jqxtabs').bind('selected', function (event) {
+                var item = event.args.item;
+                var title = $('#jqxtabs').jqxTabs('getTitleAt', item);
+            });//end bind
+        });//document ready
+    </script>
+</head>
+<body class='default'>
+    <div id='jqxtabs'>
+        <ul style='margin-left: 20px;'>
+            <li>Lehrveranstaltungen</li>
+            <li>LehrerInnen</li>
+            <li>Einstellungen</li>
+            <li>Planung LV</li>
+            <li>Planung Lehrer</li>
+            <li>Ansicht Lehrer</li>
+           
+
+        </ul>
+        <div>
+            <div id="gridLV"></div>
+			
+        </div>
+        <div>
+           <div id="grid"></div>
+        </div>
+        <div>
+            <div  style='margin: 10px;'><input id="fileupload" type="button" value="Datei Upload" /></div> 
+            <div style='margin: 10px; float: left'>
+				<div style='margin-bottom: 5px;'>Einstellung Planungsjahr:</div>
+				<div id="Planungsjahrdropdownbox" style="float:left; margin-left: 10px"></div>
+            </div>
+			<div style='margin: 10px; float: left' >
+				<div style='margin-bottom: 5px;' id="Ueberschrift">Mail-Einstellungen:</div>
+				<div id="Account" style='margin: 10px'>Mail-Account: <input type="text" /></div>
+				<div id="Passwort" style='margin: 10px'>Passwort: <input type="text" /></div>
+				<div id="Absender" style='margin: 10px'>Abgesendet von: <input type="text" /></div>
+				<div id="Betreff" style='margin: 10px'>Betreff: <input type="text" /></div>
+				<div id="Mtext" style='margin: 10px'>Mailtext:<textarea id="Mailtext"></textarea></div>
+				<input type="button" value="speichern" id='mailspeichern' style='margin-left:10px'/>
+			</div>
+			 
+        </div>
+		
+        <div>
+            <div id="planung">
+                <div id="gridPlanung"></div>
+                <div  style="margin-top: 20px;" id="gridPlanungLVLehrer"></div>
+                <div  style="margin-top: 20px;" id="gridAuswahl"></div>
+            </div>
+			
+        </div>
+        <div>
+            <div id="Lehrerplanung">
+                <div id="gridLehrerplanungLehrer"></div>
+                <div  style="margin-top: 20px;" id="gridLehrerplanungLV"></div>
+                <div  style="margin-top: 20px;" id="gridLehrerplanungAuswahl"></div>
+            </div>
+        </div>
+        <div>
+            <div id="gridAnsichtLehrer"></div>
+			<div id="Lehrerinfo"></div>
+            <div  style="margin-top: 20px;" id="gridAusgewaehlteLehrerWS"></div>
+			<div  style="margin-top: 20px;" id="gridAusgewaehlteLehrerSS"></div>
+		</div>
+
+    </div>
+</body>
+</html>
